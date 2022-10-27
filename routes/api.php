@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//Route::prefix('stock')->group(function () {
+//    Route::get('/', 'API\StockController@getStock');
+//});
+
+Route::get('stock', 'App\Http\Controllers\API\StockController@getStock');
