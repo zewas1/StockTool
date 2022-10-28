@@ -16,8 +16,15 @@ class StockController
         $this->stockService = $stockService;
     }
 
+    /**
+     * @param RetrieveStockRequest $request
+     *
+     * @return JsonResponse
+     */
     public function getStock(RetrieveStockRequest $request): JsonResponse
     {
-        return response()->json($this->stockService->retrieveStockInformation($request->get('stock_symbol')));
+        return response()->json(
+            $this->stockService->retrieveStockInformation(strtoupper($request->get('stock_symbol')))
+        );
     }
 }

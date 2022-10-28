@@ -3,11 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Constants\UserRoleConstants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property string $role
+ * @property mixed  $id
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -41,4 +46,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @param string $requestersRole
+     * @param string $requiredRole
+     *
+     * @return bool
+     */
+    public function haveThePower(string $requestersRole, string $requiredRole): bool
+    {
+        $rolePower = Collect(UserRoleConstants::ROLE_POWER);
+        $currentPower = $rolePower->get($requestersRole);
+        $requiredPower = $rolePower->get($requiredRole);
+
+        return $currentPower >= $requiredPower;
+    }
 }

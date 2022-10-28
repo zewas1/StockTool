@@ -23,3 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //});
 
 Route::get('stock', 'App\Http\Controllers\API\StockController@getStock');
+
+Route::prefix('tracked-stocks')->group(function () {
+    Route::get('list', 'App\Http\Controllers\API\TrackedStockController@list');
+    Route::get('user-list', 'App\Http\Controllers\API\TrackedStockController@userList');
+    Route::post('create', 'App\Http\Controllers\API\TrackedStockController@create');
+    Route::get('edit', 'App\Http\Controllers\API\TrackedStockController@edit');
+    Route::patch('update', 'App\Http\Controllers\API\TrackedStockController@update');
+    Route::delete('delete', 'App\Http\Controllers\API\TrackedStockController@delete');
+    Route::post('follow', 'App\Http\Controllers\API\TrackedStockController@follow');
+});
