@@ -62,6 +62,7 @@ class TrackedStockRepository implements RepositoryInterface
     /**
      * @param string $field
      * @param string $value
+     *
      * @return Collection|TrackedStock|null
      */
     public function findOneBy(string $field, string $value): Collection|TrackedStock|null
@@ -77,7 +78,7 @@ class TrackedStockRepository implements RepositoryInterface
      */
     public function findAllBy(string $field, string $value): Collection|array|null
     {
-        return TrackedStock::where($field, '=' , $value)->get();
+        return TrackedStock::where($field, '=', $value)->get();
     }
 
     /**

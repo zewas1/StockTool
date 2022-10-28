@@ -39,10 +39,10 @@ class TrackedStockController extends Controller
      * @param TrackedStockService     $trackedStockService
      */
     public function __construct(
-        TrackedStockRepository $trackedStockRepository,
+        TrackedStockRepository  $trackedStockRepository,
         UserTrackedStockService $userTrackedStockService,
-        TrackedStockService $trackedStockService
-    ){
+        TrackedStockService     $trackedStockService
+    ) {
         $this->trackedStockRepository = $trackedStockRepository;
         $this->userTrackedStockService = $userTrackedStockService;
         $this->trackedStockService = $trackedStockService;
@@ -76,7 +76,7 @@ class TrackedStockController extends Controller
         } catch (AuthorizationException $exception) {
             return response()->json([
                 'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response()
+                'error' => $exception->response(),
             ]);
         }
 
@@ -87,7 +87,7 @@ class TrackedStockController extends Controller
         );
 
         return response()->json([
-            'status' => $status
+            'status' => $status,
         ]);
     }
 
@@ -103,7 +103,7 @@ class TrackedStockController extends Controller
         } catch (AuthorizationException $exception) {
             return response()->json([
                 'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response()
+                'error' => $exception->response(),
             ]);
         }
 
@@ -111,7 +111,7 @@ class TrackedStockController extends Controller
             'status' => Response::HTTP_OK,
             'stock' => $this->trackedStockRepository->findOneBy(
                 'id',
-                $request->get('stock_id'))
+                $request->get('stock_id')),
         ]);
     }
 
@@ -124,10 +124,10 @@ class TrackedStockController extends Controller
     {
         try {
             $this->authorize('update', auth()->user());
-        } catch(AuthorizationException $exception){
+        } catch (AuthorizationException $exception) {
             return response()->json([
                 'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response()
+                'error' => $exception->response(),
             ]);
         }
 
@@ -138,7 +138,7 @@ class TrackedStockController extends Controller
         );
 
         return response()->json([
-            'status' => $status
+            'status' => $status,
         ]);
     }
 
@@ -151,17 +151,17 @@ class TrackedStockController extends Controller
     {
         try {
             $this->authorize('delete', auth()->user());
-        } catch(AuthorizationException $exception){
+        } catch (AuthorizationException $exception) {
             return response()->json([
                 'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response()
+                'error' => $exception->response(),
             ]);
         }
 
         $this->trackedStockRepository->delete($request->get('stock_id'));
 
         return response()->json([
-            'status' => Response::HTTP_NO_CONTENT
+            'status' => Response::HTTP_NO_CONTENT,
         ]);
     }
 
@@ -178,7 +178,7 @@ class TrackedStockController extends Controller
         );
 
         return response()->json([
-            'status' => $status
+            'status' => $status,
         ]);
     }
 }

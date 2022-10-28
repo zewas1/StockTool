@@ -21,7 +21,7 @@ class UserTrackedStockBuilder
             'user_id' => $userId,
             'tracked_stock_id' => $stockId,
             'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'updated_at' => Carbon::now(),
         ];
     }
 }

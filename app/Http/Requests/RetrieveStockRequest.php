@@ -22,7 +22,7 @@ class RetrieveStockRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'stock_symbol' => 'required|string'
+            'stock_symbol' => 'required|string',
         ];
     }
 }

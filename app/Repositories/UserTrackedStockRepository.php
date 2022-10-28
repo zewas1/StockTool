@@ -62,6 +62,7 @@ class UserTrackedStockRepository implements RepositoryInterface
     /**
      * @param string $field
      * @param string $value
+     *
      * @return Collection|UserTrackedStock|null
      */
     public function findOneBy(string $field, string $value): Collection|UserTrackedStock|null
@@ -77,7 +78,7 @@ class UserTrackedStockRepository implements RepositoryInterface
      */
     public function findAllBy(string $field, string $value): Collection|array|null
     {
-        return UserTrackedStock::where($field, '=' , $value)->get();
+        return UserTrackedStock::where($field, '=', $value)->get();
     }
 
     /**

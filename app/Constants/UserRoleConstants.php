@@ -11,7 +11,7 @@ final class UserRoleConstants
 
     public const ROLES = [
         self::USER,
-        self::ADMIN
+        self::ADMIN,
     ];
 
     public const ROLE_POWER = [
