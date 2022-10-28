@@ -12,7 +12,7 @@ class UserTrackedStock extends Model
     /**
      * @return BelongsTo
      */
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -20,7 +20,7 @@ class UserTrackedStock extends Model
     /**
      * @return BelongsTo
      */
-    public function trackedStock() : BelongsTo
+    public function trackedStock(): BelongsTo
     {
         return $this->belongsTo(TrackedStock::class, 'tracked_stock_id');
     }

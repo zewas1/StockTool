@@ -30,7 +30,7 @@ class StockRepository implements RepositoryInterface
 
     /**
      * @param array $data
-     * @param int $id
+     * @param int   $id
      *
      * @return void
      */
@@ -62,6 +62,7 @@ class StockRepository implements RepositoryInterface
     /**
      * @param string $field
      * @param string $value
+     *
      * @return Collection|Stock|null
      */
     public function findOneBy(string $field, string $value): Collection|Stock|null

@@ -20,13 +20,13 @@ class TrackedStock extends Model
         'stock_symbol',
         'is_tracking_enabled',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**
      * @return BelongsTo
      */
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

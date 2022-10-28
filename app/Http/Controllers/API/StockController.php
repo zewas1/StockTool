@@ -12,7 +12,8 @@ class StockController
 {
     private StockService $stockService;
 
-    public function __construct(StockService $stockService){
+    public function __construct(StockService $stockService)
+    {
         $this->stockService = $stockService;
     }
 
