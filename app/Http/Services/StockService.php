@@ -15,14 +15,30 @@ use App\Constants\StockConstants;
 
 class StockService
 {
+    /**
+     * @var Client
+     */
     private Client $client;
 
+    /**
+     * @var string
+     */
     private string $iexToken;
 
+    /**
+     * @var string
+     */
     private string $iexUri;
 
+    /**
+     * @var StockFactory
+     */
     private StockFactory $stockFactory;
 
+    /**
+     * @param Client $client
+     * @param StockFactory $stockFactory
+     */
     public function __construct(Client $client, StockFactory $stockFactory)
     {
         $this->client = $client;

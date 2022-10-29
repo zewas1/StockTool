@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @method static whereId(int $id)
  * @method static find(int $id)
+ * @method static create(array $data)
  * @property mixed $user_id
  */
 class TrackedStock extends Model

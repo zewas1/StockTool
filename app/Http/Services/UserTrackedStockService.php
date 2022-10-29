@@ -14,12 +14,26 @@ use Symfony\Component\HttpFoundation\Response;
 class UserTrackedStockService
 {
 
+    /**
+     * @var UserTrackedStockRepository
+     */
     private UserTrackedStockRepository $userTrackedStockRepository;
 
+    /**
+     * @var TrackedStockRepository
+     */
     private TrackedStockRepository $trackedStockRepository;
 
+    /**
+     * @var UserTrackedStockBuilder
+     */
     private UserTrackedStockBuilder $userTrackedStockBuilder;
 
+    /**
+     * @param UserTrackedStockRepository $userTrackedStockRepository
+     * @param TrackedStockRepository $trackedStockRepository
+     * @param UserTrackedStockBuilder $userTrackedStockBuilder
+     */
     public function __construct(
         UserTrackedStockRepository $userTrackedStockRepository,
         TrackedStockRepository     $trackedStockRepository,

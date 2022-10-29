@@ -12,6 +12,9 @@ class StockController
 {
     private StockService $stockService;
 
+    /**
+     * @param StockService $stockService
+     */
     public function __construct(StockService $stockService)
     {
         $this->stockService = $stockService;

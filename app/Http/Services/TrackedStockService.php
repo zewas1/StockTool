@@ -10,9 +10,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TrackedStockService
 {
+    /**
+     * @var TrackedStockBuilder
+     */
     private TrackedStockBuilder $trackedStockBuilder;
+
+    /**
+     * @var TrackedStockRepository
+     */
     private TrackedStockRepository $trackedStockRepository;
 
+    /**
+     * @param TrackedStockBuilder $trackedStockBuilder
+     * @param TrackedStockRepository $trackedStockRepository
+     */
     public function __construct(
         TrackedStockBuilder    $trackedStockBuilder,
         TrackedStockRepository $trackedStockRepository
