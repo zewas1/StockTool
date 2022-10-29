@@ -7,6 +7,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static create(array $data)
+ * @method static whereId(int $id)
+ * @method static find(int $id)
+ */
 class UserTrackedStock extends Model
 {
     /**

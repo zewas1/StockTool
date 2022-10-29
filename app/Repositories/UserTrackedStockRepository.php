@@ -25,7 +25,7 @@ class UserTrackedStockRepository implements RepositoryInterface
      */
     public function create(array $data): void
     {
-        UserTrackedStock::created($data);
+        UserTrackedStock::create($data);
     }
 
     /**
