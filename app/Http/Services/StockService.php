@@ -55,7 +55,7 @@ class StockService
     public function retrieveStockInformation(string $stockSymbol): Stock
     {
         $stockCacheKey = $this->getStockCacheKey($stockSymbol);
-        $stock = Cache::get($stockCacheKey);
+        $stock = $this->getStockFromCache($stockCacheKey);
 
         if ($stock) {
             return $stock;
@@ -65,11 +65,7 @@ class StockService
         $response = $this->getResponse($requestUrl);
         $stock = $this->stockFactory->create(json_decode($response->getBody()->getContents(), true));
 
-        Cache::put(
-            $stockCacheKey,
-            $stock,
-            StockConstants::STOCK_CACHE_TIME_SECONDS
-        );
+        $this->placeStockInCache($stockCacheKey, $stock);
 
         return $stock;
 
@@ -109,5 +105,30 @@ class StockService
         }
 
         return $response;
+    }
+
+    /**
+     * @param string $stockCacheKey
+     * @param Stock $stock
+     *
+     * @return void
+     */
+    private function placeStockInCache(string $stockCacheKey, Stock $stock): void
+    {
+        Cache::put(
+            $stockCacheKey,
+            $stock,
+            StockConstants::STOCK_CACHE_TIME_SECONDS
+        );
+    }
+
+    /**
+     * @param string $stockCacheKey
+     *
+     * @return Stock|null
+     */
+    private function getStockFromCache(string $stockCacheKey): ?Stock
+    {
+        return Cache::get($stockCacheKey);
     }
 }
