@@ -11,7 +11,7 @@ class Kernel extends ConsoleKernel
 {
     /**
      * @param Schedule $schedule
-     * 
+     *
      * @return void
      */
     protected function schedule(Schedule $schedule): void

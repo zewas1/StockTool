@@ -118,7 +118,7 @@ class StockService
         Cache::put(
             $stockCacheKey,
             $stock,
-            StockConstants::STOCK_CACHE_TIME_SECONDS
+            StockConstants::STOCK_CACHE_TIME_IN_SECONDS
         );
     }
 
