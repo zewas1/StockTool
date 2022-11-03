@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @property string $role
  * @property mixed  $id
+ * @property string $balance
  */
 class User extends Authenticatable
 {
