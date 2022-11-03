@@ -9,6 +9,7 @@ use App\Http\Requests\StockOwnershipRequests\PurchaseRequest;
 use App\Http\Services\StockPurchaseService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class StockOwnershipController extends Controller
 {
@@ -31,8 +32,10 @@ class StockOwnershipController extends Controller
      *
      * @throws Exception
      */
-    public function buyStock(PurchaseRequest $request)
+    public function buyStock(PurchaseRequest $request): JsonResponse
     {
+        abort_if(!auth()->user(), Response::HTTP_FORBIDDEN);
+
         return response()->json([
             'status' => $this->purchaseService->purchaseStock(
                 auth()->user(),
@@ -44,6 +47,6 @@ class StockOwnershipController extends Controller
     }
 
     public function sellStock(){
-        //TODO
+        abort_if(!auth()->user(), Response::HTTP_FORBIDDEN);
     }
 }

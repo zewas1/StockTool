@@ -7,8 +7,10 @@ namespace App\Http\Services;
 use App\Builders\OwnedStockBuilder;
 use App\Models\Stock;
 use App\Models\User;
+use App\Models\UserOwnedStock;
 use App\Repositories\UserOwnedStockRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class StockPurchaseService
@@ -45,7 +47,7 @@ class StockPurchaseService
 
     /**
      * @param User $user
-     * @param string $amount
+     * @param int $amount
      * @param string $stockSymbol
      * @param int $trackedStockId
      *
@@ -53,30 +55,111 @@ class StockPurchaseService
      *
      * @throws Exception
      */
-    public function purchaseStock(User $user, string $amount, string $stockSymbol, int $trackedStockId): int
+    public function purchaseStock(User $user, int $amount, string $stockSymbol, int $trackedStockId): int
     {
         $stock = $this->stockService->retrieveStockInformation($stockSymbol);
 
         $this->validateBalance($stock, $amount, $user);
-        $data = $this->ownedStockBuilder->build($trackedStockId, $user->id, (int) $amount);
+
+        //TODO retrieve ownedStock object, if there is none, create new.
+
+        $data = $this->ownedStockBuilder->build($trackedStockId, $user->id, $amount);
         $this->ownedStockRepository->create($data);
 
         return Response::HTTP_OK;
     }
 
     /**
+     * @throws Exception
+     */
+    public function sellStock(User $user, int $amount, string $stockSymbol, int $trackedStockId)
+    {
+        $stock = $this->stockService->retrieveStockInformation($stockSymbol);
+
+        $this->validateAmount($user, $amount, $trackedStockId);
+        $this->increaseBalance($user, $this->getIncome($stock, $amount));
+
+        //TODO, further selling flow, deduct amount and update object.
+    }
+
+    /**
      * @param Stock $stock
-     * @param string $amount
+     * @param int $amount
+     *
+     * @return float|int
+     */
+    private function getIncome(Stock $stock, int $amount): float|int
+    {
+        return $stock->latest_price * $amount;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function validateAmount(User $user, int $amount, int $trackedStockId): void
+    {
+        $ownedStock = $this->getOwnedStock($user, $trackedStockId);
+
+        if($ownedStock->amount < $amount){
+            throw new Exception('Insufficient amount', Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @param Stock $stock
+     * @param int $amount
      * @param User $user
      *
      * @return void
      *
      * @throws Exception
      */
-    private function validateBalance(Stock $stock, string $amount, User $user): void
+    private function validateBalance(Stock $stock, int $amount, User $user): void
     {
-        if ($stock->latest_price * $amount < $user->balance) {
+        $price = $stock->latest_price * $amount;
+
+        if ($price < $user->balance) {
             throw new Exception('Insufficient balance', Response::HTTP_BAD_REQUEST);
         }
+
+        $this->deductBalance($user, $price);
+    }
+
+    /**
+     * @param User $user
+     * @param float $income
+     *
+     * @return void
+     */
+    private function increaseBalance(User $user, float $income): void
+    {
+        $user->balance += $income;
+        $user->save();
+    }
+
+    /**
+     * @param User $user
+     * @param float $price
+     *
+     * @return void
+     */
+    private function deductBalance(User $user, float $price): void
+    {
+        $user->balance -= $price;
+        $user->save();
+    }
+
+    /**
+     * @param User $user
+     * @param int $trackedStockId
+     *
+     * @return UserOwnedStock|Collection
+     */
+    private function getOwnedStock(User $user, int $trackedStockId): UserOwnedStock|Collection
+    {
+        return $this->ownedStockRepository->findOneByMany([
+            'user_id' => $user->id,
+            'tracked_stock_id' => $trackedStockId
+        ]);
     }
 }

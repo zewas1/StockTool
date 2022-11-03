@@ -79,4 +79,14 @@ class UserOwnedStockRepository implements RepositoryInterface
     {
         return UserOwnedStock::where($field, '=', $value)->get();
     }
+
+    /**
+     * @param array $data
+     *
+     * @return Collection|UserOwnedStock
+     */
+    public function findOneByMany(array $data): Collection|UserOwnedStock
+    {
+        return UserOwnedStock::where($data)->first();
+    }
 }
