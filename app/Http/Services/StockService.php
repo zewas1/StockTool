@@ -6,12 +6,15 @@ namespace App\Http\Services;
 
 use App\Factories\StockFactory;
 use App\Models\Stock;
+use App\Models\User;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use App\Constants\StockConstants;
+use Symfony\Component\HttpFoundation\Response;
 
 class StockService
 {
@@ -68,8 +71,9 @@ class StockService
         $this->placeStockInCache($stockCacheKey, $stock);
 
         return $stock;
-
     }
+
+
 
     /**
      * @param string $stockSymbol

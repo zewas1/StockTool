@@ -7,6 +7,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TrackedStockRequests\CreateTrackedStockRequest;
 use App\Http\Requests\TrackedStockRequests\FollowTrackedStockRequest;
+use App\Http\Requests\TrackedStockRequests\ListTrackedStockRequest;
 use App\Http\Requests\TrackedStockRequests\UpdateTrackedStockRequest;
 use App\Http\Services\TrackedStockService;
 use App\Http\Services\UserTrackedStockService;
@@ -49,19 +50,17 @@ class TrackedStockController extends Controller
     }
 
     /**
+     * @param ListTrackedStockRequest $request
+     *
      * @return JsonResponse
      */
-    public function list(): JsonResponse
+    public function list(ListTrackedStockRequest $request): JsonResponse
     {
-        return response()->json($this->trackedStockRepository->all());
-    }
+        if($request->get('show_one_user')){
+            return response()->json($this->userTrackedStockService->getTrackedStocks(auth()->user()->id));
+        }
 
-    /**
-     * @return JsonResponse
-     */
-    public function listUsers(): JsonResponse
-    {
-        return response()->json($this->userTrackedStockService->getTrackedStocks(auth()->user()->id));
+        return response()->json($this->trackedStockRepository->all());
     }
 
     /**
