@@ -12,6 +12,7 @@ use App\Http\Requests\TrackedStockRequests\UpdateTrackedStockRequest;
 use App\Http\Services\TrackedStockService;
 use App\Http\Services\UserTrackedStockService;
 use App\Repositories\TrackedStockRepository;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,10 +74,7 @@ class TrackedStockController extends Controller
         try {
             $this->authorize('create', auth()->user());
         } catch (AuthorizationException $exception) {
-            return response()->json([
-                'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response(),
-            ]);
+            return response()->json($this->authorisationException($exception));
         }
 
         $status = $this->trackedStockService->storeTrackedStock(
@@ -100,10 +98,7 @@ class TrackedStockController extends Controller
         try {
             $this->authorize('edit', auth()->user());
         } catch (AuthorizationException $exception) {
-            return response()->json([
-                'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response(),
-            ]);
+            return response()->json($this->authorisationException($exception));
         }
 
         return response()->json([
@@ -124,10 +119,7 @@ class TrackedStockController extends Controller
         try {
             $this->authorize('update', auth()->user());
         } catch (AuthorizationException $exception) {
-            return response()->json([
-                'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response(),
-            ]);
+            return response()->json($this->authorisationException($exception));
         }
 
         $status = $this->trackedStockService->updateTrackedStock(
@@ -151,10 +143,7 @@ class TrackedStockController extends Controller
         try {
             $this->authorize('delete', auth()->user());
         } catch (AuthorizationException $exception) {
-            return response()->json([
-                'status' => Response::HTTP_FORBIDDEN,
-                'error' => $exception->response(),
-            ]);
+            return response()->json($this->authorisationException($exception));
         }
 
         $this->trackedStockRepository->delete($request->get('stock_id'));
@@ -179,5 +168,18 @@ class TrackedStockController extends Controller
         return response()->json([
             'status' => $status,
         ]);
+    }
+
+    /**
+     * @param AuthorizationException|Exception $exception
+     *
+     * @return array
+     */
+    private function authorisationException(AuthorizationException|Exception $exception): array
+    {
+        return [
+            'status' => Response::HTTP_FORBIDDEN,
+            'error' => $exception->response(),
+        ];
     }
 }
