@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StockPurchaseService
 {
+    private const DEFAULT_SCALE_PRECISION = 4;
+
     /**
      * @var StockService
      */
@@ -36,9 +38,9 @@ class StockPurchaseService
      * @param OwnedStockBuilder $ownedStockBuilder
      */
     public function __construct(
-        StockService $stockService,
+        StockService             $stockService,
         UserOwnedStockRepository $ownedStockRepository,
-        OwnedStockBuilder $ownedStockBuilder
+        OwnedStockBuilder        $ownedStockBuilder
     ) {
         $this->stockService = $stockService;
         $this->ownedStockRepository = $ownedStockRepository;
@@ -86,11 +88,11 @@ class StockPurchaseService
      * @param Stock $stock
      * @param int $amount
      *
-     * @return float|int
+     * @return string
      */
-    private function getIncome(Stock $stock, int $amount): float|int
+    private function getIncome(Stock $stock, int $amount): string
     {
-        return $stock->latest_price * $amount;
+        return bcmul((string)$stock->latest_price, (string)$amount, self::DEFAULT_SCALE_PRECISION);
     }
 
     /**
@@ -100,7 +102,7 @@ class StockPurchaseService
     {
         $ownedStock = $this->getOwnedStock($user, $trackedStockId);
 
-        if($ownedStock->amount < $amount){
+        if ($ownedStock->amount < $amount) {
             throw new Exception('Insufficient amount', Response::HTTP_BAD_REQUEST);
         }
     }
@@ -116,7 +118,7 @@ class StockPurchaseService
      */
     private function validateBalance(Stock $stock, int $amount, User $user): void
     {
-        $price = $stock->latest_price * $amount;
+        $price = bcmul($stock->latest_price, (string)$amount, self::DEFAULT_SCALE_PRECISION);
 
         if ($price < $user->balance) {
             throw new Exception('Insufficient balance', Response::HTTP_BAD_REQUEST);
@@ -127,25 +129,25 @@ class StockPurchaseService
 
     /**
      * @param User $user
-     * @param float $income
+     * @param string $income
      *
      * @return void
      */
-    private function increaseBalance(User $user, float $income): void
+    private function increaseBalance(User $user, string $income): void
     {
-        $user->balance += $income;
+        $user->balance = bcadd($user->balance, $income, self::DEFAULT_SCALE_PRECISION);
         $user->save();
     }
 
     /**
      * @param User $user
-     * @param float $price
+     * @param string $price
      *
      * @return void
      */
-    private function deductBalance(User $user, float $price): void
+    private function deductBalance(User $user, string $price): void
     {
-        $user->balance -= $price;
+        $user->balance = bcsub($user->balance, $price, self::DEFAULT_SCALE_PRECISION);
         $user->save();
     }
 
